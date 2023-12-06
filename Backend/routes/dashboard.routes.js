@@ -1,26 +1,31 @@
 const express = require("express");
 const doubtRouter = express.Router();
-const { Doubt } = require("../model/doubt.model");
+const Doubt = require("../model/doubt.model");
 const { auth } = require("../middleware/authentication");
 
 doubtRouter.post("/create", async (req, res) => {
-  const { email, content, doubtType } = req.body;
+  const { email, doubts, doubtType } = req.body;
   try {
-    const doubt = new Doubt({
+    const doubtsss = new Doubt({
       email,
-      content,
+      doubts,
       doubtType
     });
-    await doubt.save();
-    res.status(200).json(doubt);
+    await doubtsss.save();
+    res.status(200).json(doubtsss);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
 
-doubtRouter.get("/", auth, async (req, res) => {
-
+doubtRouter.get("/history", async (req, res) => {
+  try {
+    const data = await Doubt.find()
+    res.status(200).send(data)
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 
